@@ -1,9 +1,10 @@
 from pydantic import BaseModel
-from typing import Dict
+from typing import Any, Optional
 
 class PostCreate(BaseModel):
     title: str
-    content: Dict
+    content: Any
 
 class PostUpdate(BaseModel):
-    content: Dict
+    content: Any
+    title: Optional[str] = None
