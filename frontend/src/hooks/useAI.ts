@@ -1,4 +1,5 @@
 import { useBlogStore } from "@/store/blogStore";
+import { aiAPI } from "@/services/api";
 
 // Simulates streaming AI response token by token
 const streamTokens = async (
@@ -28,31 +29,8 @@ export function useAI() {
     setAIStreaming(true);
 
     try {
-      const token = localStorage.getItem('access_token');
-      
-      const response = await fetch("http://127.0.0.1:8000/api/ai/generate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(token && { "Authorization": `Bearer ${token}` }),
-        },
-        body: JSON.stringify({
-          text: post.contentText,
-          mode: mode,
-        }),
-      });
-
-      if (!response.ok) {
-        try {
-          const error = await response.json();
-          throw new Error(error.detail || `API Error: ${response.status}`);
-        } catch {
-          throw new Error(`API Error: ${response.status}`);
-        }
-      }
-
-      const data = await response.json();
-      const result = data.result;
+      const response = await aiAPI.generate(post.contentText, mode);
+      const result = response.data?.result;
 
       if (!result) {
         throw new Error("No result from AI API");
@@ -61,8 +39,10 @@ export function useAI() {
       // Stream the result token by token
       await streamTokens(result, appendAIResult);
       setAIStreaming(false);
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
+    } catch (error: any) {
+      const errorMessage =
+        error?.response?.data?.detail ||
+        (error instanceof Error ? error.message : "Unknown error occurred");
       console.error("AI Error:", errorMessage);
       appendAIResult(`Error: ${errorMessage}`);
       setAIStreaming(false);

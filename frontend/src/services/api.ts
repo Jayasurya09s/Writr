@@ -107,14 +107,14 @@ export const commentsAPI = {
 
 // AI API endpoints
 export const aiAPI = {
-  generate: (text: string) =>
-    api.post('/api/ai/generate', { text }),
+  generate: (text: string, mode: 'summary' | 'grammar') =>
+    api.post('/api/ai/generate', { text, mode }),
   
   generateSummary: (text: string) =>
-    api.post('/api/ai/generate', { text }),
+    api.post('/api/ai/generate', { text, mode: 'summary' }),
   
   generateTitle: (text: string) =>
-    api.post('/api/ai/generate', { text }),
+    api.post('/api/ai/generate', { text, mode: 'summary' }),
 };
 
 // Public endpoints (no auth required)

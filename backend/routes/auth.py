@@ -72,4 +72,5 @@ async def refresh_token(payload: dict):
         raise HTTPException(status_code=401, detail="Invalid refresh token")
 
     access_token = create_access_token({"userId": user_id})
-    return {"access_token": access_token}
+    refresh_token = create_refresh_token({"userId": user_id})
+    return {"access_token": access_token, "refresh_token": refresh_token}
