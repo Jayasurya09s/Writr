@@ -6,14 +6,19 @@ from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI(title="Smart Blog Editor API", version="1.0.0")
 
 # Production-aware CORS configuration
-allowed_origins = os.getenv("ALLOWED_ORIGINS", "*").split(",")
-if "*" not in allowed_origins:
-    allowed_origins = [origin.strip() for origin in allowed_origins]
+allowed_origins_raw = os.getenv("ALLOWED_ORIGINS", "*")
+allowed_origins = [origin.strip() for origin in allowed_origins_raw.split(",") if origin.strip()]
+if not allowed_origins:
+    allowed_origins = ["*"]
+
+allow_credentials = "*" not in allowed_origins
+if not allow_credentials:
+    allowed_origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
-    allow_credentials=True,
+    allow_credentials=allow_credentials,
     allow_methods=["*"],
     allow_headers=["*"],
 )
