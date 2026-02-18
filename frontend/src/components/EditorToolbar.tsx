@@ -5,6 +5,7 @@ import {
   $getSelection,
   $isRangeSelection,
   TextFormatType,
+  $insertNodes,
 } from "lexical";
 import {
   $setBlocksType,
@@ -14,6 +15,8 @@ import { $createParagraphNode } from "lexical";
 import { INSERT_ORDERED_LIST_COMMAND, INSERT_UNORDERED_LIST_COMMAND, REMOVE_LIST_COMMAND } from "@lexical/list";
 import { $isListNode, ListNode } from "@lexical/list";
 import { $getNearestNodeOfType, mergeRegister } from "@lexical/utils";
+import { INSERT_TABLE_COMMAND } from "@lexical/table";
+import { $createEquationNode } from "./nodes/EquationNode";
 import {
   Bold,
   Italic,
@@ -25,6 +28,8 @@ import {
   List,
   ListOrdered,
   Type,
+  Table,
+  SquareFunction,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -116,6 +121,43 @@ export default function EditorToolbar() {
     });
   };
 
+  const insertTable = () => {
+    const rows = prompt("Number of rows (e.g., 3):", "3");
+    const cols = prompt("Number of columns (e.g., 3):", "3");
+    
+    if (!rows || !cols) return;
+    
+    const numRows = parseInt(rows);
+    const numCols = parseInt(cols);
+    
+    if (isNaN(numRows) || isNaN(numCols) || numRows < 1 || numCols < 1) {
+      alert("Please enter valid numbers for rows and columns.");
+      return;
+    }
+    
+    editor.dispatchCommand(INSERT_TABLE_COMMAND, {
+      rows: String(numRows),
+      columns: String(numCols),
+    });
+  };
+
+  const insertEquation = () => {
+    const equation = prompt(
+      "Enter LaTeX equation (e.g., E = mc^2, \\frac{a}{b}, \\sqrt{x}):",
+      "E = mc^2"
+    );
+    
+    if (!equation) return;
+    
+    editor.update(() => {
+      const selection = $getSelection();
+      if ($isRangeSelection(selection)) {
+        const equationNode = $createEquationNode(equation, false);
+        $insertNodes([equationNode]);
+      }
+    });
+  };
+
   const ToolbarButton = ({
     active,
     onClick,
@@ -175,6 +217,22 @@ export default function EditorToolbar() {
         <Heading3 className="w-3.5 h-3.5" />
       </ToolbarButton>
 
+
+      <Divider />
+
+      {/* Table and Math */}
+      <ToolbarButton
+        onClick={insertTable}
+        title="Insert Table"
+      >
+        <Table className="w-3.5 h-3.5" />
+      </ToolbarButton>
+      <ToolbarButton
+        onClick={insertEquation}
+        title="Insert Math Equation"
+      >
+        <SquareFunction className="w-3.5 h-3.5" />
+      </ToolbarButton>
       <Divider />
 
       {/* Text formatting */}

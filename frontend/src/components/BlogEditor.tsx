@@ -9,10 +9,13 @@ import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { HeadingNode } from "@lexical/rich-text";
 import { ListNode, ListItemNode } from "@lexical/list";
+import { TablePlugin } from "@lexical/react/LexicalTablePlugin";
+import { TableCellNode, TableNode, TableRowNode } from "@lexical/table";
 import { $getRoot, EditorState } from "lexical";
 
 import { useAutoSave } from "@/hooks/useAutoSave";
 import EditorToolbar from "./EditorToolbar";
+import { EquationNode } from "./nodes/EquationNode";
 
 // Plugin to load post content when switching posts
 function LoadContentPlugin({ postId, content }: { postId: string; content: string }) {
@@ -93,6 +96,7 @@ function BlogEditorCore({ postId, content, title }: BlogEditorCoreProps) {
         />
         <HistoryPlugin />
         <ListPlugin />
+        <TablePlugin hasCellMerge={true} hasCellBackgroundColor={true} />
         <OnChangePlugin onChange={handleChange} ignoreSelectionChange />
         <LoadContentPlugin postId={postId} content={content} />
       </div>
@@ -108,7 +112,15 @@ interface BlogEditorProps {
 
 const editorConfig = {
   namespace: "BlogEditor",
-  nodes: [HeadingNode, ListNode, ListItemNode],
+  nodes: [
+    HeadingNode,
+    ListNode,
+    ListItemNode,
+    TableNode,
+    TableCellNode,
+    TableRowNode,
+    EquationNode,
+  ],
   onError: (error: Error) => {
     console.error("[Lexical Error]", error);
   },

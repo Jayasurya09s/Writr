@@ -14,15 +14,16 @@ A modern, full-stack blog editing platform with AI-powered summarization and gra
 1. **[Quick Start](#-quick-start)**
 2. **[Features](#-features)**
 3. **[Project Structure](#-project-structure)**
-4. **[Setup & Installation](#-setup--installation)**
-5. **[Running the Application](#-running-the-application)**
-6. **[API Documentation](#-api-documentation)**
-7. **[Testing Guide](#-testing-guide)**
-8. **[Production Deployment](#-production-deployment)**
-9. **[Troubleshooting](#-troubleshooting)**
-10. **[Tech Stack](#-tech-stack)**
-11. **[Recent Updates](#-recent-updates-latest-session)**
-12. **[FAQ](#-faq)**
+4. **[System Architecture](#-system-architecture)**
+5. **[Setup & Installation](#-setup--installation)**
+6. **[Running the Application](#-running-the-application)**
+7. **[API Documentation](#-api-documentation)**
+8. **[Testing Guide](#-testing-guide)**
+9. **[Production Deployment](#-production-deployment)**
+10. **[Troubleshooting](#-troubleshooting)**
+11. **[Tech Stack](#-tech-stack)**
+12. **[Recent Updates](#-recent-updates-latest-session)**
+13. **[FAQ](#-faq)**
 
 ---
 
@@ -72,6 +73,9 @@ Invoke-RestMethod -Uri "http://127.0.0.1:8000/health" -Method Get
 - ✅ **Search & Filter** - Find posts quickly with search functionality
 - ✅ **Real-time Updates** - See changes instantly with auto-save
 - ✅ **Word Count** - Automatic word counting and read time estimation
+- ✅ **Rich Text Formatting** - Bold, italic, underline, strikethrough, headings (H1-H3), lists (ordered/unordered)
+- ✅ **Table Support** - Insert and edit tables with custom rows/columns, cell editing, and professional styling
+- ✅ **Math Equations** - Insert LaTeX-style mathematical expressions using KaTeX rendering (inline & block mode)
 
 ### 🤖 AI Features
 - ✅ **AI Summarize** - Generates professional 2-3 sentence summaries
@@ -164,11 +168,116 @@ SyncDraft AI/
 │   └── tailwind.config.ts      # Paper/ink/olive color tokens
 │
 ├── .env                        # Backend environment variables
-├── API_TESTING_GUIDE.md        # Detailed testing guide
 ├── docker-compose.yml          # Docker compose configuration
 ├── nginx.conf                  # Nginx reverse proxy config
 └── readme.md                   # This file
 ```
+
+---
+
+## 🏗 System Architecture
+
+```mermaid
+graph TB
+    subgraph "Client Browser"
+        UI[React UI<br/>Notion-Style Interface]
+        Editor[Lexical Editor<br/>Rich Text + Tables + Math]
+        Store[Zustand Store<br/>State Management]
+        UI --> Editor
+        UI --> Store
+        Editor --> Store
+    end
+
+    subgraph "Frontend - Vercel"
+        Router[React Router<br/>Protected Routes]
+        API_Client[Axios Client<br/>JWT Interceptors]
+        Hooks[Custom Hooks<br/>useAutoSave, useAI]
+        
+        UI --> Router
+        Store --> API_Client
+        Hooks --> API_Client
+    end
+
+    subgraph "Backend - Render.com"
+        FastAPI[FastAPI Server<br/>CORS + Middleware]
+        
+        subgraph "Routes"
+            Auth[Auth Routes<br/>/auth/signup, /auth/login]
+            Posts[Posts Routes<br/>/api/posts CRUD]
+            AI_Route[AI Routes<br/>/api/ai/generate]
+            Public[Public Routes<br/>/api/public/posts]
+        end
+        
+        subgraph "Utils"
+            JWT[JWT Handler<br/>Token Creation & Validation]
+            AI_Client[OpenRouter Client<br/>AI API Integration]
+            Auth_Utils[Auth Utils<br/>Password Hashing]
+        end
+        
+        FastAPI --> Auth
+        FastAPI --> Posts
+        FastAPI --> AI_Route
+        FastAPI --> Public
+        
+        Auth --> JWT
+        Auth --> Auth_Utils
+        Posts --> JWT
+        AI_Route --> AI_Client
+    end
+
+    subgraph "External Services"
+        MongoDB[(MongoDB Atlas<br/>Document Database)]
+        OpenRouter[OpenRouter API<br/>AI Models]
+    end
+
+    subgraph "Database Schema"
+        Users_DB[Users Collection<br/>• id, email, full_name<br/>• password_hash<br/>• created_at]
+        Posts_DB[Posts Collection<br/>• id, title, content<br/>• status: draft/published<br/>• author_id, word_count<br/>• created_at, updated_at]
+    end
+
+    API_Client -->|HTTP/JSON| FastAPI
+    Auth -->|bcrypt| Auth_Utils
+    Posts -->|Motor Driver| MongoDB
+    Auth -->|Motor Driver| MongoDB
+    AI_Route -->|REST API| OpenRouter
+    
+    MongoDB --> Users_DB
+    MongoDB --> Posts_DB
+
+    style UI fill:#fef3c7
+    style Editor fill:#fef3c7
+    style Store fill:#fef3c7
+    style FastAPI fill:#dbeafe
+    style MongoDB fill:#dcfce7
+    style OpenRouter fill:#fce7f3
+```
+
+### Architecture Highlights
+
+**Frontend Layer (React + TypeScript)**
+- ⚡ **Vite** - Lightning-fast build tool and dev server
+- 🎨 **Lexical** - Advanced rich text editor with custom nodes (tables, equations)
+- 🗃️ **Zustand** - Lightweight state management with content normalization
+- 🎯 **React Router** - Client-side routing with protected routes
+- 🔐 **JWT Interceptors** - Automatic token refresh and auth handling
+
+**Backend Layer (FastAPI + Python)**
+- 🚀 **FastAPI** - Modern async API framework with auto-generated docs
+- 🔒 **JWT Authentication** - Secure token-based auth with refresh tokens
+- 🗄️ **Motor** - Async MongoDB driver for high performance
+- 🤖 **OpenRouter Integration** - AI-powered summarization and grammar checking
+- 🛡️ **CORS Middleware** - Secure cross-origin resource sharing
+
+**Data Flow**
+1. User edits content → Lexical captures changes → Zustand normalizes state
+2. Auto-save hook debounces (1.4s) → Axios sends to backend
+3. FastAPI validates JWT → Motor writes to MongoDB
+4. AI features → OpenRouter API → Streaming response to frontend
+
+**Deployment Architecture**
+- **Frontend**: Static deployment on Vercel (CDN, automatic HTTPS)
+- **Backend**: Docker container on Render.com (auto-scaling, health checks)
+- **Database**: MongoDB Atlas (cloud, automatic backups, replicas)
 
 ---
 
@@ -473,17 +582,29 @@ Delete your comment
    - Click "Fix grammar" button
    - Should see corrected version ✅
 
-7. **Test Publishing**
+7. **Test Table Insertion**
+   - Click the Table icon (📊) in toolbar
+   - Enter rows: 3, columns: 3
+   - Click in cells to edit content
+   - Table should be styled with borders and hover effects ✅
+
+8. **Test Math Equations**
+   - Click the Math icon (∫) in toolbar
+   - Enter LaTeX equation (e.g., `E = mc^2` or `\frac{a}{b}` or `\sqrt{x^2 + y^2}`)
+   - Equation should render beautifully with KaTeX
+   - Try inline and block equations ✅
+
+9. **Test Publishing**
    - Click "Publish" button (top right)
    - Status badge changes to "Published"
    - Close sidebar
 
-8. **View Public Posts**
+10. **View Public Posts**
    - Click "Home" or navigate to `/posts`
    - Should see your published post in grid
    - Click to view full content ✅
 
-9. **Test Post Reader**
+11. **Test Post Reader**
    - Click on any published post
    - Should see full content displayed
    - Author info visible
@@ -808,7 +929,8 @@ Then rebuild and deploy.
 - **Framework:** React 18 with TypeScript
 - **Build Tool:** Vite 5.4
 - **State Management:** Zustand
-- **Editor:** Lexical (with plugins)
+- **Editor:** Lexical (with RichText, List, Table plugins)
+- **Math Rendering:** KaTeX for LaTeX equations
 - **Styling:** Tailwind CSS 3.4
 - **UI:** ShadCN UI (Toast, Tooltip)
 - **HTTP Client:** Axios with JWT interceptors
@@ -872,6 +994,12 @@ Then rebuild and deploy.
 - `blogStore.ts` - Lexical content normalization
 - `useAutoSave.ts` - Real debounced auto-save (not simulated)
 - Content extraction properly handles nested Lexical JSON
+
+✅ **Advanced Editor Features (NEW)**
+- **Table Support** - Insert/edit tables with custom dimensions, cell editing, hover effects
+- **Math Equations** - LaTeX-style expressions with KaTeX (e.g., `E = mc^2`, `\frac{a}{b}`)
+- **Custom Nodes** - `EquationNode` for rendering math with error handling
+- **Table Plugin** - Full @lexical/table integration with cell merging
 
 ✅ **File Cleanup**
 - Deleted `src/test/` directory
