@@ -12,10 +12,14 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["Inter", "-apple-system", "BlinkMacSystemFont", "sans-serif"],
-        serif: ["Lora", "Georgia", "Times New Roman", "serif"],
+        sans: ["Manrope", "-apple-system", "BlinkMacSystemFont", "sans-serif"],
+        serif: ["Fraunces", "Georgia", "Times New Roman", "serif"],
       },
       colors: {
+        paper: "hsl(var(--paper))",
+        ink: "hsl(var(--ink))",
+        "ink-muted": "hsl(var(--ink-muted))",
+        olive: "hsl(var(--olive))",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -82,6 +86,7 @@ export default {
         lg: "var(--shadow-lg)",
         editor: "var(--shadow-editor)",
         ai: "var(--shadow-ai)",
+        paper: "var(--shadow-paper)",
       },
       keyframes: {
         "accordion-down": {

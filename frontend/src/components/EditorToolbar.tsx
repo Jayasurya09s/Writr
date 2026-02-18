@@ -8,7 +8,6 @@ import {
 } from "lexical";
 import {
   $setBlocksType,
-  $getSelectionStyleValueForProperty,
 } from "@lexical/selection";
 import { $createHeadingNode, $isHeadingNode, HeadingTagType } from "@lexical/rich-text";
 import { $createParagraphNode } from "lexical";
@@ -26,7 +25,6 @@ import {
   List,
   ListOrdered,
   Type,
-  Minus,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 

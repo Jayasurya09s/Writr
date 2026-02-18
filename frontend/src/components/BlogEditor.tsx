@@ -11,8 +11,6 @@ import { HeadingNode } from "@lexical/rich-text";
 import { ListNode, ListItemNode } from "@lexical/list";
 import { $getRoot, EditorState } from "lexical";
 
-import { useBlogStore } from "@/store/blogStore";
-import { useDebounce } from "@/hooks/useDebounce";
 import { useAutoSave } from "@/hooks/useAutoSave";
 import EditorToolbar from "./EditorToolbar";
 
@@ -54,34 +52,7 @@ interface BlogEditorCoreProps {
 }
 
 function BlogEditorCore({ postId, content, title }: BlogEditorCoreProps) {
-  const { updatePost, setSaveStatus } = useBlogStore();
-  const { save } = useAutoSave();
-
-  // The actual save function
-  const performSave = useCallback(
-    async (id: string, serializedContent: string, plainText: string, currentTitle: string) => {
-      await save({
-        id,
-        title: currentTitle,
-        content: serializedContent,
-        contentText: plainText,
-        status: "draft",
-      });
-    },
-    [save]
-  );
-
-  // Debounced version — fires 2s after typing stops
-  const { debouncedFn: debouncedSave } = useDebounce(
-    (...args: unknown[]) =>
-      performSave(
-        args[0] as string,
-        args[1] as string,
-        args[2] as string,
-        args[3] as string
-      ),
-    2000
-  );
+  const { schedule } = useAutoSave(1400);
 
   const handleChange = useCallback(
     (editorState: EditorState) => {
@@ -90,16 +61,16 @@ function BlogEditorCore({ postId, content, title }: BlogEditorCoreProps) {
         const plainText = root.getTextContent();
         const serialized = JSON.stringify(editorState.toJSON());
 
-        // Update local state immediately (optimistic)
-        updatePost(postId, {
+        schedule({
+          id: postId,
+          title,
+          content: serialized,
           contentText: plainText,
+          status: "draft",
         });
-
-        // Debounced API save
-        debouncedSave(postId, serialized, plainText, title);
       });
     },
-    [postId, title, updatePost, debouncedSave]
+    [postId, title, schedule]
   );
 
   return (

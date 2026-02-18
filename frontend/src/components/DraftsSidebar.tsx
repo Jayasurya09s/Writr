@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { format, formatDistanceToNow } from "date-fns";
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { formatDistanceToNow } from "date-fns";
 import {
   Plus,
-  FileText,
-  ChevronLeft,
-  ChevronRight,
-  Trash2,
+  Search,
   Globe,
   Lock,
-  Search,
+  Trash2,
+  ChevronLeft,
   BookOpen,
 } from "lucide-react";
 import { useBlogStore, Post } from "@/store/blogStore";
@@ -19,6 +18,7 @@ interface DraftsSidebarProps {
 }
 
 export default function DraftsSidebar({ isOpen }: DraftsSidebarProps) {
+  const navigate = useNavigate();
   const {
     posts,
     publicPosts,
@@ -44,27 +44,28 @@ export default function DraftsSidebar({ isOpen }: DraftsSidebarProps) {
     }
   }, [sidebarTab, loadPublicPosts]);
 
-  const filtered = (sidebarTab === "my-posts" ? posts : publicPosts).filter(
-    (p) =>
-      p.title.toLowerCase().includes(search.toLowerCase()) ||
-      p.contentText.toLowerCase().includes(search.toLowerCase())
-  );
+  const filtered = useMemo(() => {
+    const list = sidebarTab === "my-posts" ? posts : publicPosts;
+    return list.filter((post) => {
+      const query = search.toLowerCase();
+      return (
+        post.title.toLowerCase().includes(query) ||
+        post.contentText.toLowerCase().includes(query)
+      );
+    });
+  }, [posts, publicPosts, sidebarTab, search]);
 
-  const handleCreate = () => {
-    createPost();
-  };
-
-  const handleDelete = (e: React.MouseEvent, id: string) => {
-    e.stopPropagation();
+  const handleDelete = (event: React.MouseEvent, id: string) => {
+    event.stopPropagation();
     setDeletingId(id);
     setTimeout(() => {
       deletePost(id);
       setDeletingId(null);
-    }, 300);
+    }, 250);
   };
 
-  const handleTogglePublish = (e: React.MouseEvent, post: Post) => {
-    e.stopPropagation();
+  const handleTogglePublish = (event: React.MouseEvent, post: Post) => {
+    event.stopPropagation();
     if (post.status === "published") {
       unpublishPost(post.id);
     } else {
@@ -75,196 +76,175 @@ export default function DraftsSidebar({ isOpen }: DraftsSidebarProps) {
   return (
     <aside
       className={cn(
-        "flex flex-col h-full transition-all duration-300 ease-in-out",
-        "bg-sidebar text-sidebar-foreground border-r border-sidebar-border",
-        isOpen ? "w-72" : "w-0 overflow-hidden"
+        "transition-all duration-300",
+        "bg-ink text-paper border-r border-ink/10",
+        isOpen ? "w-80" : "w-0 overflow-hidden"
       )}
     >
-      {/* Header */}
-      <div className="flex items-center justify-between px-4 pt-5 pb-3">
-        <div className="flex items-center gap-2">
-          <div
-            className="w-7 h-7 rounded-md flex items-center justify-center"
-            style={{ background: "hsl(var(--gradient-accent, 35 90% 55%))" }}
-          >
-            <FileText className="w-4 h-4 text-sidebar-primary-foreground" />
+      <div className="h-full flex flex-col">
+        <div className="px-4 pt-5 pb-4 flex items-center justify-between">
+          <div>
+            <p className="text-xs uppercase tracking-[0.2em] text-paper/50">
+              Workspace
+            </p>
+            <h2 className="text-sm font-semibold text-paper">
+              {sidebarTab === "my-posts" ? "My Drafts" : "Public Library"}
+            </h2>
           </div>
-          <span className="text-sm font-semibold tracking-wide text-sidebar-foreground/90">
-            {sidebarTab === "my-posts" ? "Blog Editor" : "Published"}
-          </span>
-        </div>
-        <button
-          onClick={toggleSidebar}
-          className="p-1.5 rounded-md hover:bg-sidebar-accent transition-colors text-sidebar-foreground/50 hover:text-sidebar-foreground"
-        >
-          <ChevronLeft className="w-4 h-4" />
-        </button>
-      </div>
-
-      {/* Tabs */}
-      <div className="flex gap-2 px-3 pb-3">
-        <button
-          onClick={() => setSidebarTab("my-posts")}
-          className={cn(
-            "flex-1 px-3 py-2 rounded-lg text-xs font-medium transition-all",
-            sidebarTab === "my-posts"
-              ? "bg-sidebar-primary text-sidebar-primary-foreground"
-              : "bg-sidebar-accent text-sidebar-foreground/60 hover:text-sidebar-foreground"
-          )}
-        >
-          My Posts
-        </button>
-        <button
-          onClick={() => setSidebarTab("public")}
-          className={cn(
-            "flex-1 px-3 py-2 rounded-lg text-xs font-medium transition-all flex items-center justify-center gap-1.5",
-            sidebarTab === "public"
-              ? "bg-sidebar-primary text-sidebar-primary-foreground"
-              : "bg-sidebar-accent text-sidebar-foreground/60 hover:text-sidebar-foreground"
-          )}
-        >
-          <Globe className="w-3 h-3" />
-          Public
-        </button>
-      </div>
-
-      {/* New Post button - only for My Posts tab */}
-      {sidebarTab === "my-posts" && (
-        <div className="px-3 pb-3">
           <button
-            onClick={handleCreate}
-            className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all
-              text-sidebar-primary-foreground bg-sidebar-primary hover:opacity-90 active:scale-[0.98]"
+            onClick={toggleSidebar}
+            className="p-2 rounded-lg hover:bg-paper/10 transition"
           >
-            <Plus className="w-4 h-4" />
-            New Post
+            <ChevronLeft className="w-4 h-4" />
           </button>
         </div>
-      )}
 
-      {/* Search */}
-      <div className="px-3 pb-3">
-        <div className="relative">
-          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-sidebar-foreground/40" />
-          <input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder={sidebarTab === "my-posts" ? "Search posts..." : "Search public..."}
-            className="w-full pl-8 pr-3 py-2 text-xs rounded-lg bg-sidebar-accent border border-sidebar-border
-              text-sidebar-foreground placeholder:text-sidebar-foreground/40 focus:outline-none
-              focus:ring-1 focus:ring-sidebar-primary transition-all"
-          />
-        </div>
-      </div>
-
-      {/* Divider */}
-      <div className="mx-3 mb-2 border-t border-sidebar-border/50" />
-
-      {/* Count */}
-      <div className="px-4 pb-2 flex items-center justify-between">
-        <span className="text-xs text-sidebar-foreground/40 uppercase tracking-widest font-medium">
-          {sidebarTab === "my-posts" ? "Posts" : "Publis"}
-        </span>
-        <span className="text-xs text-sidebar-foreground/40">{filtered.length}</span>
-      </div>
-
-      {/* Posts list */}
-      <div className="flex-1 overflow-y-auto px-2 space-y-1 pb-4">
-        {isPublicLoading && sidebarTab === "public" && (
-          <div className="px-4 py-4 text-center text-sidebar-foreground/40 text-xs">
-            Loading public posts...
-          </div>
-        )}
-        {filtered.length === 0 && !isPublicLoading && (
-          <div className="px-4 py-8 text-center text-sidebar-foreground/40 text-xs">
-            {search ? "No posts found" : sidebarTab === "my-posts" ? "No posts yet. Create one!" : "No published posts"}
-          </div>
-        )}
-        {filtered.map((post) => (
-          <div
-            key={post.id}
-            onClick={() => setActivePost(post.id)}
+        <div className="px-4 pb-4 flex gap-2">
+          <button
+            onClick={() => setSidebarTab("my-posts")}
             className={cn(
-              "sidebar-item group relative",
-              activePostId === post.id && sidebarTab === "my-posts" && "active",
-              deletingId === post.id && "opacity-0 scale-95 transition-all"
+              "flex-1 px-3 py-2 rounded-lg text-xs font-semibold transition",
+              sidebarTab === "my-posts"
+                ? "bg-paper text-ink"
+                : "bg-paper/10 text-paper/70 hover:text-paper"
             )}
           >
-            <div className="flex items-start justify-between gap-2">
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-sidebar-foreground truncate leading-tight">
-                  {post.title || "Untitled Post"}
-                </p>
-                <p className="text-xs text-sidebar-foreground/50 mt-0.5 truncate">
-                  {sidebarTab === "public" && post.author ? (
-                    <span>by {post.author.full_name}</span>
-                  ) : (
-                    <>
-                      {post.contentText
-                        ? post.contentText.slice(0, 50) + (post.contentText.length > 50 ? "…" : "")
-                        : "No content yet"}
-                    </>
-                  )}
-                </p>
-              </div>
-              <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+            My posts
+          </button>
+          <button
+            onClick={() => setSidebarTab("public")}
+            className={cn(
+              "flex-1 px-3 py-2 rounded-lg text-xs font-semibold transition",
+              sidebarTab === "public"
+                ? "bg-paper text-ink"
+                : "bg-paper/10 text-paper/70 hover:text-paper"
+            )}
+          >
+            Public
+          </button>
+        </div>
+
+        {sidebarTab === "my-posts" && (
+          <div className="px-4 pb-4">
+            <button
+              onClick={() => createPost()}
+              className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold bg-paper text-ink hover:opacity-90 transition"
+            >
+              <Plus className="w-4 h-4" />
+              New draft
+            </button>
+          </div>
+        )}
+
+        <div className="px-4 pb-4">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-paper/40" />
+            <input
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder={sidebarTab === "my-posts" ? "Search drafts" : "Search library"}
+              className="w-full pl-9 pr-3 py-2 rounded-lg bg-paper/10 text-paper text-xs placeholder:text-paper/40 border border-paper/10 focus:outline-none focus:ring-1 focus:ring-paper/40"
+            />
+          </div>
+        </div>
+
+        <div className="px-4 pb-2 text-[11px] uppercase tracking-[0.2em] text-paper/40 flex items-center justify-between">
+          <span>{sidebarTab === "my-posts" ? "Drafts" : "Published"}</span>
+          <span>{filtered.length}</span>
+        </div>
+
+        <div className="flex-1 overflow-y-auto px-3 pb-4 space-y-2">
+          {isPublicLoading && sidebarTab === "public" && (
+            <div className="text-xs text-paper/50 px-3 py-6 text-center">
+              Loading public posts...
+            </div>
+          )}
+          {!isPublicLoading && filtered.length === 0 && (
+            <div className="text-xs text-paper/50 px-3 py-6 text-center">
+              {search
+                ? "No matches"
+                : sidebarTab === "my-posts"
+                ? "Create your first draft"
+                : "No public posts yet"}
+            </div>
+          )}
+
+          {filtered.map((post) => (
+            <div
+              key={post.id}
+              onClick={() =>
+                sidebarTab === "public"
+                  ? navigate(`/posts/${post.id}`)
+                  : setActivePost(post.id)
+              }
+              className={cn(
+                "group rounded-xl px-3 py-3 cursor-pointer transition",
+                activePostId === post.id && sidebarTab === "my-posts"
+                  ? "bg-paper text-ink"
+                  : "bg-paper/5 hover:bg-paper/10",
+                deletingId === post.id && "opacity-0 scale-95"
+              )}
+            >
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <p
+                    className={cn(
+                      "text-sm font-semibold truncate",
+                      activePostId === post.id && sidebarTab === "my-posts"
+                        ? "text-ink"
+                        : "text-paper"
+                    )}
+                  >
+                    {post.title || "Untitled"}
+                  </p>
+                  <p className="text-[11px] text-paper/60 truncate mt-1">
+                    {sidebarTab === "public" && post.author
+                      ? `by ${post.author.full_name}`
+                      : post.contentText
+                      ? post.contentText.slice(0, 60) +
+                        (post.contentText.length > 60 ? "..." : "")
+                      : "No content yet"}
+                  </p>
+                </div>
                 {sidebarTab === "my-posts" && (
-                  <>
+                  <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition">
                     <button
-                      onClick={(e) => handleTogglePublish(e, post)}
+                      onClick={(event) => handleTogglePublish(event, post)}
+                      className="p-1 rounded hover:bg-ink/10"
                       title={post.status === "published" ? "Unpublish" : "Publish"}
-                      className="p-1 rounded hover:bg-sidebar-border transition-colors"
                     >
                       {post.status === "published" ? (
-                        <Globe className="w-3 h-3 text-status-published" />
+                        <Globe className="w-3.5 h-3.5 text-olive" />
                       ) : (
-                        <Lock className="w-3 h-3 text-sidebar-foreground/40" />
+                        <Lock className="w-3.5 h-3.5 text-paper/50" />
                       )}
                     </button>
                     <button
-                      onClick={(e) => handleDelete(e, post.id)}
-                      title="Delete post"
-                      className="p-1 rounded hover:bg-destructive/20 text-sidebar-foreground/40 hover:text-destructive transition-colors"
+                      onClick={(event) => handleDelete(event, post.id)}
+                      className="p-1 rounded hover:bg-ink/10"
+                      title="Delete"
                     >
-                      <Trash2 className="w-3 h-3" />
+                      <Trash2 className="w-3.5 h-3.5 text-paper/50" />
                     </button>
-                  </>
+                  </div>
                 )}
               </div>
-            </div>
 
-            <div className="flex items-center gap-2 mt-1">
-              <span
-                className={cn(
-                  "text-[10px] px-1.5 py-0.5 rounded-full font-medium",
-                  post.status === "published" ? "status-published" : "status-draft"
-                )}
-              >
-                {post.status === "published" ? "Published" : "Draft"}
-              </span>
-              <span className="text-[10px] text-sidebar-foreground/35">
-                {formatDistanceToNow(post.updatedAt, { addSuffix: true })}
-              </span>
-              {post.wordCount > 0 && (
-                <span className="text-[10px] text-sidebar-foreground/35">
-                  {post.wordCount}w
+              <div className="mt-2 flex items-center gap-2 text-[10px] text-paper/40">
+                <span>
+                  {post.status === "published" ? "Published" : "Draft"}
                 </span>
-              )}
+                <span>·</span>
+                <span>{formatDistanceToNow(post.updatedAt, { addSuffix: true })}</span>
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
 
-      {/* Footer */}
-      <div className="px-4 py-3 border-t border-sidebar-border/50 text-[10px] text-sidebar-foreground/30">
-        {sidebarTab === "my-posts" ? (
-          <>
-            {posts.length} post{posts.length !== 1 ? "s" : ""} ·{" "}
-            {posts.filter((p) => p.status === "published").length} published
-          </>
-        ) : (
-          `${publicPosts.length} public post${publicPosts.length !== 1 ? "s" : ""}`
-        )}
+        <div className="px-4 py-4 border-t border-paper/10 text-[11px] text-paper/40 flex items-center gap-2">
+          <BookOpen className="w-3.5 h-3.5" />
+          SyncDraft Editor
+        </div>
       </div>
     </aside>
   );

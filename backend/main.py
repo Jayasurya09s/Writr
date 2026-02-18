@@ -2,12 +2,12 @@ import os
 from fastapi import FastAPI
 from routes import posts, ai, auth, comments, users
 from fastapi.middleware.cors import CORSMiddleware
+from config import ALLOWED_ORIGINS
 
 app = FastAPI(title="Smart Blog Editor API", version="1.0.0")
 
 # Production-aware CORS configuration
-allowed_origins_raw = os.getenv("ALLOWED_ORIGINS", "*")
-allowed_origins = [origin.strip() for origin in allowed_origins_raw.split(",") if origin.strip()]
+allowed_origins = [origin.strip() for origin in ALLOWED_ORIGINS.split(",") if origin.strip()]
 if not allowed_origins:
     allowed_origins = ["*"]
 

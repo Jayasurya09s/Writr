@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,75 +6,68 @@
 
 @layer base {
   :root {
-    /* === Core Palette === */
-    --background: 40 20% 98%;
-    --foreground: 220 20% 12%;
+    --paper: 40 33% 96%;
+    --ink: 222 20% 12%;
+    --ink-muted: 220 10% 45%;
+    --olive: 140 25% 35%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 220 20% 12%;
+    --background: 40 33% 96%;
+    --foreground: 222 20% 12%;
+
+    --card: 36 30% 98%;
+    --card-foreground: 222 20% 12%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 20% 12%;
+    --popover-foreground: 222 20% 12%;
 
-    /* Slate-based primary */
-    --primary: 215 25% 18%;
-    --primary-foreground: 40 20% 98%;
+    --primary: 222 20% 12%;
+    --primary-foreground: 40 33% 96%;
 
-    --secondary: 220 14% 93%;
-    --secondary-foreground: 220 20% 25%;
+    --secondary: 30 14% 92%;
+    --secondary-foreground: 222 20% 25%;
 
-    --muted: 220 14% 95%;
-    --muted-foreground: 220 10% 50%;
+    --muted: 30 18% 92%;
+    --muted-foreground: 220 10% 45%;
 
-    --accent: 35 90% 55%;
-    --accent-foreground: 220 20% 12%;
+    --accent: 38 75% 55%;
+    --accent-foreground: 222 20% 12%;
 
-    --destructive: 0 72% 51%;
+    --destructive: 0 72% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 14% 88%;
-    --input: 220 14% 88%;
-    --ring: 35 90% 55%;
+    --border: 30 10% 85%;
+    --input: 30 10% 85%;
+    --ring: 38 75% 55%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
-    /* === Editor-specific === */
-    --editor-bg: 0 0% 100%;
-    --editor-foreground: 220 20% 14%;
-    --editor-line: 220 14% 92%;
+    --editor-bg: 36 30% 98%;
+    --editor-foreground: 222 20% 14%;
+    --editor-line: 30 10% 90%;
     --editor-placeholder: 220 10% 60%;
 
-    /* === Sidebar === */
-    --sidebar-background: 220 20% 12%;
-    --sidebar-foreground: 220 14% 88%;
-    --sidebar-primary: 35 90% 55%;
-    --sidebar-primary-foreground: 220 20% 12%;
-    --sidebar-accent: 220 18% 20%;
-    --sidebar-accent-foreground: 220 14% 88%;
-    --sidebar-border: 220 18% 18%;
-    --sidebar-ring: 35 90% 55%;
+    --sidebar-background: 222 20% 12%;
+    --sidebar-foreground: 40 20% 90%;
+    --sidebar-primary: 38 75% 55%;
+    --sidebar-primary-foreground: 222 20% 12%;
+    --sidebar-accent: 222 18% 18%;
+    --sidebar-accent-foreground: 40 20% 90%;
+    --sidebar-border: 222 18% 18%;
+    --sidebar-ring: 38 75% 55%;
 
-    /* === Status colors === */
-    --status-draft: 220 14% 60%;
-    --status-published: 142 60% 45%;
-    --status-saving: 35 90% 55%;
+    --status-draft: 220 12% 55%;
+    --status-published: 140 25% 35%;
+    --status-saving: 38 75% 55%;
 
-    /* === Gradients === */
-    --gradient-hero: linear-gradient(135deg, hsl(215 25% 18%), hsl(220 20% 28%));
-    --gradient-accent: linear-gradient(135deg, hsl(35 90% 55%), hsl(25 85% 48%));
-    --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
-
-    /* === Shadows === */
     --shadow-sm: 0 1px 3px hsl(220 20% 12% / 0.08), 0 1px 2px hsl(220 20% 12% / 0.04);
-    --shadow-md: 0 4px 12px hsl(220 20% 12% / 0.10), 0 2px 6px hsl(220 20% 12% / 0.06);
-    --shadow-lg: 0 10px 32px hsl(220 20% 12% / 0.12), 0 4px 12px hsl(220 20% 12% / 0.08);
-    --shadow-editor: 0 0 0 1px hsl(220 14% 88%), 0 8px 40px hsl(220 20% 12% / 0.08);
-    --shadow-ai: 0 4px 24px hsl(35 90% 55% / 0.20);
+    --shadow-md: 0 8px 24px hsl(220 20% 12% / 0.08);
+    --shadow-lg: 0 16px 40px hsl(220 20% 12% / 0.12);
+    --shadow-editor: 0 0 0 1px hsl(30 10% 88%), 0 18px 45px hsl(220 20% 12% / 0.08);
+    --shadow-ai: 0 6px 28px hsl(38 75% 55% / 0.15);
+    --shadow-paper: 0 24px 60px hsl(220 20% 12% / 0.08);
 
-    /* === Animations === */
     --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
 
@@ -85,71 +78,58 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: "Manrope", -apple-system, BlinkMacSystemFont, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* === Editor Content Styles === */
   .editor-content {
-    font-family: 'Lora', Georgia, 'Times New Roman', serif;
+    font-family: "Fraunces", Georgia, serif;
     font-size: 18px;
     line-height: 1.85;
     color: hsl(var(--editor-foreground));
   }
 
   .editor-content h1 {
-    font-family: 'Lora', Georgia, serif;
-    font-size: 2.4rem;
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 2.5rem;
     font-weight: 700;
     line-height: 1.2;
-    margin-top: 2rem;
-    margin-bottom: 0.75rem;
-    color: hsl(var(--foreground));
+    margin-top: 2.4rem;
+    margin-bottom: 0.85rem;
     letter-spacing: -0.02em;
   }
 
   .editor-content h2 {
-    font-family: 'Lora', Georgia, serif;
-    font-size: 1.8rem;
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 1.9rem;
     font-weight: 600;
     line-height: 1.3;
-    margin-top: 1.75rem;
-    margin-bottom: 0.6rem;
-    color: hsl(var(--foreground));
-    letter-spacing: -0.015em;
+    margin-top: 2rem;
+    margin-bottom: 0.7rem;
   }
 
   .editor-content h3 {
-    font-family: 'Lora', Georgia, serif;
-    font-size: 1.4rem;
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 1.5rem;
     font-weight: 600;
-    line-height: 1.4;
-    margin-top: 1.5rem;
-    margin-bottom: 0.5rem;
-    color: hsl(var(--foreground));
+    line-height: 1.35;
+    margin-top: 1.6rem;
+    margin-bottom: 0.6rem;
   }
 
   .editor-content p {
-    margin-bottom: 1.2rem;
+    margin-bottom: 1.25rem;
   }
 
   .editor-content ul,
   .editor-content ol {
-    margin: 1rem 0;
-    padding-left: 1.75rem;
+    margin: 1rem 0 1.2rem;
+    padding-left: 1.5rem;
   }
 
   .editor-content li {
     margin-bottom: 0.4rem;
-  }
-
-  .editor-content ul li {
-    list-style-type: disc;
-  }
-
-  .editor-content ol li {
-    list-style-type: decimal;
   }
 
   .editor-content strong {
@@ -157,23 +137,9 @@
     color: hsl(var(--foreground));
   }
 
-  .editor-content em {
-    font-style: italic;
-    color: hsl(var(--foreground));
-  }
-
-  .editor-content [data-lexical-editor] {
-    outline: none;
-    min-height: 400px;
-  }
-
-  .editor-content [data-lexical-editor]:focus {
-    outline: none;
-  }
-
   .editor-placeholder {
     color: hsl(var(--editor-placeholder));
-    font-family: 'Lora', Georgia, serif;
+    font-family: "Fraunces", Georgia, serif;
     font-size: 18px;
     position: absolute;
     top: 0;
@@ -184,46 +150,6 @@
 }
 
 @layer components {
-  /* === Sidebar item === */
-  .sidebar-item {
-    @apply flex flex-col gap-1 px-3 py-3 rounded-lg cursor-pointer transition-all;
-    transition: all var(--transition-fast);
-  }
-
-  .sidebar-item:hover {
-    background: hsl(var(--sidebar-accent));
-  }
-
-  .sidebar-item.active {
-    background: hsl(var(--sidebar-accent));
-    border-left: 2px solid hsl(var(--sidebar-primary));
-  }
-
-  /* === AI streaming text === */
-  .ai-streaming::after {
-    content: '▋';
-    animation: blink 1s step-end infinite;
-    color: hsl(var(--accent));
-    margin-left: 1px;
-  }
-
-  @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
-  }
-
-  /* === Auto-save pulse === */
-  @keyframes save-pulse {
-    0% { opacity: 0.5; transform: scale(0.95); }
-    50% { opacity: 1; transform: scale(1); }
-    100% { opacity: 0.5; transform: scale(0.95); }
-  }
-
-  .saving-indicator {
-    animation: save-pulse 1.5s ease-in-out infinite;
-  }
-
-  /* === Toolbar button === */
   .toolbar-btn {
     @apply flex items-center justify-center w-8 h-8 rounded-md text-sm font-medium transition-all;
     transition: all var(--transition-fast);
@@ -239,50 +165,45 @@
     color: hsl(var(--primary-foreground));
   }
 
-  /* === Publish badge === */
-  .status-draft {
-    color: hsl(var(--status-draft));
-    background: hsl(var(--status-draft) / 0.12);
-  }
-
-  .status-published {
-    color: hsl(var(--status-published));
-    background: hsl(var(--status-published) / 0.12);
-  }
-
-  /* === AI panel gradient border === */
   .ai-panel-border {
     background: linear-gradient(hsl(var(--card)), hsl(var(--card))) padding-box,
-                var(--gradient-accent) border-box;
+      linear-gradient(135deg, hsl(38 75% 55%), hsl(28 70% 48%)) border-box;
     border: 1.5px solid transparent;
   }
 
-  /* === Scrollbar === */
-  ::-webkit-scrollbar {
-    width: 6px;
+  .ai-streaming::after {
+    content: "▋";
+    animation: blink 1s step-end infinite;
+    color: hsl(var(--accent));
+    margin-left: 1px;
   }
 
-  ::-webkit-scrollbar-track {
-    background: transparent;
+  .saving-indicator {
+    animation: save-pulse 1.5s ease-in-out infinite;
   }
 
-  ::-webkit-scrollbar-thumb {
-    background: hsl(var(--border));
-    border-radius: 3px;
+  @keyframes blink {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
   }
 
-  ::-webkit-scrollbar-thumb:hover {
-    background: hsl(var(--muted-foreground));
-  }
-}
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-
-  .glass {
-    background: var(--gradient-glass);
-    backdrop-filter: blur(12px);
+  @keyframes save-pulse {
+    0% {
+      opacity: 0.5;
+      transform: scale(0.95);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    100% {
+      opacity: 0.5;
+      transform: scale(0.95);
+    }
   }
 }

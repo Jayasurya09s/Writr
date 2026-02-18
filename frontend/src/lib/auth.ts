@@ -1,7 +1,3 @@
-// =============================================
-// Real JWT Auth — Connected to Backend
-// =============================================
-
 import { authAPI } from "@/services/api";
 
 export interface User {

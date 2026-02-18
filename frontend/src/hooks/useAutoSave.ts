@@ -1,8 +1,5 @@
+import { useCallback, useRef } from "react";
 import { useBlogStore } from "@/store/blogStore";
-
-// Simulates API calls with realistic latency
-const simulateAPIDelay = (ms = 400) =>
-  new Promise((resolve) => setTimeout(resolve, ms));
 
 export interface SavePayload {
   id: string;
@@ -12,42 +9,54 @@ export interface SavePayload {
   status: "draft" | "published";
 }
 
-/**
- * Simulated auto-save hook.
- * In production: replace simulateAPICall with actual fetch('/api/posts/{id}', { method: 'PATCH' })
- */
-export function useAutoSave() {
-  const { setSaveStatus, updatePost } = useBlogStore();
+export function useAutoSave(delayMs = 1200) {
+  const { setSaveStatus, updatePost, updatePostLocal } = useBlogStore();
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pendingRef = useRef<SavePayload | null>(null);
 
-  const save = async (payload: SavePayload) => {
-    setSaveStatus("saving");
-
-    try {
-      // === MOCK API CALL ===
-      // In production, replace with:
-      // await fetch(`/api/posts/${payload.id}`, {
-      //   method: 'PATCH',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ content: payload.content, title: payload.title }),
-      // });
-      await simulateAPIDelay(600);
-
-      updatePost(payload.id, {
+  const schedule = useCallback(
+    (payload: SavePayload) => {
+      pendingRef.current = payload;
+      updatePostLocal(payload.id, {
+        title: payload.title,
         content: payload.content,
         contentText: payload.contentText,
-        title: payload.title,
       });
+      setSaveStatus("saving");
 
-      setSaveStatus("saved");
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
 
-      // Reset to idle after 3s
-      setTimeout(() => setSaveStatus("idle"), 3000);
-    } catch (err) {
-      console.error("[AutoSave] Failed:", err);
-      setSaveStatus("error");
-      setTimeout(() => setSaveStatus("idle"), 4000);
+      timerRef.current = setTimeout(async () => {
+        if (!pendingRef.current) return;
+        const pending = pendingRef.current;
+        pendingRef.current = null;
+        await updatePost(pending.id, {
+          title: pending.title,
+          content: pending.content,
+          contentText: pending.contentText,
+        });
+      }, delayMs);
+    },
+    [delayMs, setSaveStatus, updatePost, updatePostLocal]
+  );
+
+  const flush = useCallback(async () => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
     }
-  };
+    if (pendingRef.current) {
+      const pending = pendingRef.current;
+      pendingRef.current = null;
+      await updatePost(pending.id, {
+        title: pending.title,
+        content: pending.content,
+        contentText: pending.contentText,
+      });
+    }
+  }, [updatePost]);
 
-  return { save };
+  return { schedule, flush };
 }
