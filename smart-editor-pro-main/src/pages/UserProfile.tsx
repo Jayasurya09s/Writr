@@ -46,7 +46,7 @@ export default function UserProfile() {
             All Posts
           </button>
 
-          <span className="font-semibold text-sm">SyncDraft AI</span>
+          <span className="font-semibold text-sm">Writr</span>
 
           <div className="w-8" />
         </div>
@@ -119,7 +119,7 @@ export default function UserProfile() {
       </div>
 
       <footer className="border-t border-border/50 py-6 px-6 text-center text-xs text-muted-foreground/50">
-        SyncDraft AI · All rights reserved
+        Writr · All rights reserved
       </footer>
     </div>
   );

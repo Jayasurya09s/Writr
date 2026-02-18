@@ -57,7 +57,7 @@ export default function PostReader() {
             <div className="w-6 h-6 rounded-md bg-accent flex items-center justify-center">
               <PenLine className="w-3.5 h-3.5 text-accent-foreground" />
             </div>
-            <span className="font-semibold text-sm">SyncDraft AI</span>
+            <span className="font-semibold text-sm">Writr</span>
           </div>
 
           <button

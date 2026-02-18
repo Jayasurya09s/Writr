@@ -31,7 +31,7 @@ export default function PublishedPosts() {
             <div className="w-6 h-6 rounded-md bg-accent flex items-center justify-center">
               <PenLine className="w-3.5 h-3.5 text-accent-foreground" />
             </div>
-            <span className="font-semibold text-sm">SyncDraft AI</span>
+            <span className="font-semibold text-sm">Writr</span>
           </div>
 
           <button
@@ -144,7 +144,7 @@ export default function PublishedPosts() {
       </div>
 
       <footer className="border-t border-border/50 py-6 px-6 text-center text-xs text-muted-foreground/50">
-        SyncDraft AI · All rights reserved
+        Writr · All rights reserved
       </footer>
     </div>
   );

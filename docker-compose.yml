@@ -3,7 +3,7 @@ version: '3.8'
 services:
   mongodb:
     image: mongo:latest
-    container_name: syncdraft-mongodb
+    container_name: writr-mongodb
     restart: always
     ports:
       - "27017:27017"
@@ -13,13 +13,13 @@ services:
     volumes:
       - mongodb_data:/data/db
     networks:
-      - syncdraft-network
+      - writr-network
 
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: syncdraft-backend
+    container_name: writr-backend
     restart: always
     ports:
       - "8000:8000"
@@ -32,7 +32,7 @@ services:
     depends_on:
       - mongodb
     networks:
-      - syncdraft-network
+      - writr-network
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s
@@ -43,7 +43,7 @@ services:
     build:
       context: ./smart-editor-pro-main
       dockerfile: Dockerfile
-    container_name: syncdraft-frontend
+    container_name: writr-frontend
     restart: always
     ports:
       - "80:80"
@@ -53,7 +53,7 @@ services:
     depends_on:
       - backend
     networks:
-      - syncdraft-network
+      - writr-network
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
 
@@ -61,5 +61,5 @@ volumes:
   mongodb_data:
 
 networks:
-  syncdraft-network:
+  writr-network:
     driver: bridge

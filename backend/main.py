@@ -21,7 +21,7 @@ app.add_middleware(
 @app.get("/")
 async def root():
     return {
-        "message": "SyncDraft AI API",
+        "message": "Writr API",
         "version": "1.0.0",
         "status": "running"
     }

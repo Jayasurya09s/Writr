@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, AxiosError } from 'axios';
 
-// Use environment variable or fallback to localhost for development
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
+// Use environment variable or fallback to production backend
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://syncdraft-ai.onrender.com';
 
 // Create axios instance
 const api: AxiosInstance = axios.create({

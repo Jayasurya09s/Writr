@@ -1,4 +1,4 @@
-# 🚀 SyncDraft AI - Smart Blog Editor with AI Features
+# 🚀 Writr - AI-Powered Blog Editor
 
 A modern, full-stack blog editing platform with AI-powered summarization and grammar checking. Built with React/TypeScript frontend and Python FastAPI backend.
 
@@ -85,7 +85,7 @@ Invoke-RestMethod -Uri "http://127.0.0.1:8000/api/ai/generate" `
 ## 📁 Project Structure
 
 ```
-SyncDraft AI/
+Writr/
 ├── backend/
 │   ├── config.py              # Configuration & env variables
 │   ├── main.py                # FastAPI app & routing
@@ -444,7 +444,7 @@ Invoke-RestMethod -Uri "http://127.0.0.1:8000/auth/signup" `
 
 ### ⚡ Quick Deploy to Render + Vercel (5-10 minutes)
 
-This is the recommended way to deploy SyncDraft AI to production.
+This is the recommended way to deploy Writr to production.
 
 #### Backend Deployment to Render
 
@@ -464,7 +464,7 @@ This is the recommended way to deploy SyncDraft AI to production.
 2. Click "New +" → "Web Service"
 3. Connect your GitHub repository (or paste public repo URL)
 4. Fill in the form:
-   - **Name**: `syncdraft-ai-backend`
+   - **Name**: `writr-backend`
    - **Environment**: `Docker`
    - **Branch**: `main`
    - **Build Command**: (auto-detected)
@@ -517,7 +517,7 @@ vercel --prod
 
 # Follow prompts:
 # - Link to existing project? No
-# - Project name: syncdraft-ai
+# - Project name: writr
 # - Framework: Vite
 # - Output directory: dist
 # - Ignore build command? No

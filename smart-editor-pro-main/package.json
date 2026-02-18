@@ -1,6 +1,6 @@
 {
-  "name": "syncdraft-ai",
-  "description": "AI-powered blog editor with smart content suggestions",
+  "name": "writr",
+  "description": "Writr - AI-powered blog editor with smart content suggestions",
   "private": true,
   "version": "1.0.0",
   "type": "module",

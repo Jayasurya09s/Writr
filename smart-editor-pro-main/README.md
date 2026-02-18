@@ -1,6 +1,6 @@
-# SyncDraft AI - Frontend
+# Writr - Frontend
 
-Modern React TypeScript frontend for SyncDraft AI blog editor with AI-powered features.
+Modern React TypeScript frontend for Writr blog editor with AI-powered features.
 
 ## Setup & Development
 
@@ -140,5 +140,5 @@ Deploy the `dist/` folder to any static hosting (Vercel, Netlify, etc.)
 
 ---
 
-**SyncDraft AI** - Smart Blog Editing, Made Simple ✨
+**Writr** - Smart Blog Editing, Made Simple ✨
 

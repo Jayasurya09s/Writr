@@ -12,7 +12,7 @@ async def generate_summary(text: str):
                     "Authorization": f"Bearer {OPENROUTER_API_KEY}",
                     "Content-Type": "application/json",
                     "HTTP-Referer": "http://localhost:3000",
-                    "X-Title": "SyncDraft AI"
+                    "X-Title": "Writr"
                 },
                 json={
                     "model": "openrouter/auto",
@@ -54,7 +54,7 @@ async def fix_grammar(text: str):
                     "Authorization": f"Bearer {OPENROUTER_API_KEY}",
                     "Content-Type": "application/json",
                     "HTTP-Referer": "http://localhost:3000",
-                    "X-Title": "SyncDraft AI"
+                    "X-Title": "Writr"
                 },
                 json={
                     "model": "openrouter/auto",
