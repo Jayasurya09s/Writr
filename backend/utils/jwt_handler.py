@@ -2,6 +2,11 @@ from jose import jwt, JWTError
 from config import JWT_SECRET
 from datetime import datetime, timedelta
 from fastapi import HTTPException
+import sys
+
+if not JWT_SECRET:
+    print("ERROR: JWT_SECRET environment variable not set!", file=sys.stderr)
+    raise ValueError("JWT_SECRET is required but not set in environment")
 
 ALGO = "HS256"
 
