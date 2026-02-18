@@ -1,7 +1,14 @@
 import axios, { AxiosInstance, AxiosError } from 'axios';
 
-// Use environment variable or fallback to production backend
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://syncdraft-ai.onrender.com';
+const normalizeApiBaseUrl = (rawUrl: string): string => {
+  const trimmed = rawUrl.trim().replace(/\/+$/, '');
+  return trimmed.replace(/\/api$/, '');
+};
+
+// Use environment variable or fall back to same-origin for deployments with a proxy
+const API_BASE_URL = normalizeApiBaseUrl(
+  import.meta.env.VITE_API_URL || window.location.origin
+);
 
 // Create axios instance
 const api: AxiosInstance = axios.create({
@@ -48,7 +55,7 @@ api.interceptors.response.use(
       } catch (refreshError) {
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
-        localStorage.removeItem('user');
+        localStorage.removeItem('current_user');
         window.location.href = '/auth';
       }
     }
