@@ -182,6 +182,20 @@
     animation: save-pulse 1.5s ease-in-out infinite;
   }
 
+  .editor-content {
+    line-height: 1.75;
+  }
+
+  .editor-content p {
+    margin-bottom: 1.25rem;
+    color: hsl(var(--foreground));
+    font-size: 1.0625rem;
+  }
+
+  .editor-content p:last-child {
+    margin-bottom: 0;
+  }
+
   @keyframes blink {
     0%,
     100% {

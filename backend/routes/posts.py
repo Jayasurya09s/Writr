@@ -162,8 +162,12 @@ async def get_published_posts():
         posts.append({
             "id": post.get("id"),
             "title": post.get("title"),
+            "content": post.get("content"),
             "authorId": post.get("authorId"),
-            "authorName": author.get("name", "") if author else "",
+            "author": {
+                "id": post.get("authorId"),
+                "full_name": author.get("name", "") if author else "",
+            } if author else None,
             "status": post.get("status"),
             "createdAt": post.get("createdAt"),
             "updatedAt": post.get("updatedAt"),
@@ -188,7 +192,10 @@ async def get_public_post(id: str):
         "title": post.get("title"),
         "content": post.get("content"),
         "authorId": post.get("authorId"),
-        "authorName": author.get("name", "") if author else "",
+        "author": {
+            "id": post.get("authorId"),
+            "full_name": author.get("name", "") if author else "",
+        } if author else None,
         "status": post.get("status"),
         "createdAt": post.get("createdAt"),
         "updatedAt": post.get("updatedAt"),
