@@ -2,21 +2,27 @@
 
 A modern, full-stack blog editing platform with AI-powered summarization and grammar checking. Built with React/TypeScript frontend and Python FastAPI backend. Features auto-save, publish/unpublish, and public blog viewing.
 
+**🔗 Live Links:**
+- **Frontend (Vercel)**: [https://writr-two.vercel.app](https://writr-two.vercel.app)
+- **Backend (Render)**: [https://syncdraft-ai.onrender.com](https://syncdraft-ai.onrender.com)
+- **API Docs**: [https://syncdraft-ai.onrender.com/docs](https://syncdraft-ai.onrender.com/docs)
+
 ---
 
 ## 📋 Table of Contents
 
-1. [Quick Start](#quick-start)
-2. [Features](#features)
-3. [Project Structure](#project-structure)
-4. [Setup & Installation](#setup--installation)
-5. [Running the Application](#running-the-application)
-6. [API Documentation](#api-documentation)
-7. [Testing Guide](#testing-guide)
-8. [Production Deployment](#production-deployment)
-9. [Troubleshooting](#troubleshooting)
-10. [Tech Stack](#tech-stack)
-11. [FAQ](#faq)
+1. **[Quick Start](#-quick-start)**
+2. **[Features](#-features)**
+3. **[Project Structure](#-project-structure)**
+4. **[Setup & Installation](#-setup--installation)**
+5. **[Running the Application](#-running-the-application)**
+6. **[API Documentation](#-api-documentation)**
+7. **[Testing Guide](#-testing-guide)**
+8. **[Production Deployment](#-production-deployment)**
+9. **[Troubleshooting](#-troubleshooting)**
+10. **[Tech Stack](#-tech-stack)**
+11. **[Recent Updates](#-recent-updates-latest-session)**
+12. **[FAQ](#-faq)**
 
 ---
 
